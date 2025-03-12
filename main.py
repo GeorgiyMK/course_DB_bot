@@ -9,8 +9,6 @@ from sqlalchemy.orm import sessionmaker, declarative_base
 from telebot.states import StatesGroup, State
 from create_DBdict import engine, Word
 
-
-
 # Читаем конфигурационный файл
 config = configparser.ConfigParser()
 config.read("settings.ini", encoding="utf-8-sig")
@@ -116,7 +114,6 @@ def answer_to_help(message):
 # @bot.message_handler(func=lambda message: True)
 # def answer_to_any_message(message):
 #     bot.reply_to(message, 'Не дохера ли хочешь?')
-
 
 if __name__ == '__main__':
     print('Bot starts!')
