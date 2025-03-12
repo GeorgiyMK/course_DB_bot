@@ -111,10 +111,6 @@ def check_answer(message):
 def answer_to_help(message):
     bot.reply_to(message, 'Помоги себе сам!')
 
-# @bot.message_handler(func=lambda message: True)
-# def answer_to_any_message(message):
-#     bot.reply_to(message, 'Не дохера ли хочешь?')
-
 if __name__ == '__main__':
     print('Bot starts!')
     # Ожидание сообщений от пользователя
