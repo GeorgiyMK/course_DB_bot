@@ -27,17 +27,38 @@ Base = declarative_base()
 
 
 # Создаём таблицу
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey
+from sqlalchemy.orm import declarative_base, relationship
+
+Base = declarative_base()
+
+# Таблица пользователей
+class User(Base):
+    __tablename__ = "users"
+
+    user_id = Column(Integer, primary_key=True)
+    username = Column(String(100), nullable=False)
+    words = relationship("Word", back_populates="user")
+
+
+# Таблица слов
 class Word(Base):
     __tablename__ = "words"
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    english_word = Column(String(15), unique=True, nullable=False)
-    russian_translation = Column(String(15), nullable=False)
 
-    __table_args__ = (UniqueConstraint("english_word", name="uq_english_word"),)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    english_word = Column(String(100), nullable=False)
+    russian_translation = Column(String(100), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.user_id"), nullable=True)  # Может быть NULL
+    user = relationship("User", back_populates="words")
+
+
+# Создание таблиц в БД
+Base.metadata.create_all(engine)
+print("✅ База данных создана!")
 
 
 # Функция для загрузки слов из PDF-файла
-def extract_words_from_pdf(pdf_path, num_words=300):
+def extract_words_from_pdf(pdf_path, num_words=20):
     words = set()
     try:
         with open(pdf_path, "rb") as file:
@@ -82,7 +103,7 @@ def translate_word(word):
 
 # Функция для добавления слов в базу данных
 def insert_words(pdf_path):
-    words = extract_words_from_pdf(pdf_path, num_words=300)
+    words = extract_words_from_pdf(pdf_path, num_words=20)
     if not words:
         print("Ошибка: не удалось загрузить слова из PDF.")
         return
